@@ -8,6 +8,7 @@ description: Use AIMZ LABS through its connected MCP server to create and inspec
 ## Connect and discover
 
 - Use the connected AIMZ LABS MCP server and read its initialization instructions and tool schemas. Discover the currently available tools; the server and documentation can change. Start with `whoami` when account context matters. See https://aimzlabs.com/docs/mcp and https://aimzlabs.com/docs/mcp/tools.
+- Install the current CLI and restart the MCP client after upgrading. MCP 0.4.4 and newer marks new generation and ComfyUI requests as MCP for the administrator's activity view; older jobs and older clients may have no source label.
 - The skill does not install or connect the MCP server. If it is missing, direct the user to the setup guide: install the AIMZ CLI, run `aimz login` themselves, and use `aimz mcp-config` to configure their client. Never ask the user to paste passwords, credentials or login tokens into chat.
 - Respect the configured credit approval policy and the server's confirmation flow. Explain estimates before billed work, follow actual user confirmation and never invent confirmation tokens or silently change approval mode. Preserve existing user data and avoid unnecessary deletion.
 
