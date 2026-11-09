@@ -19,6 +19,13 @@ description: Use AIMZ LABS through its connected MCP server to create and inspec
 - Workspace: use `workspace_list`, `workspace_get`, and `workspace_plan` before `workspace_generate`. Give each new request a unique 8–40 character ASCII letter, digit, underscore or hyphen `request_id`; reuse it while waiting on that request. Once complete, `workspace_copy_result` saves into a new copy using the returned `updated_at` as `expected_updated_at`.
 - Labs workflows, workspace nodes and ComfyUI Hub are distinct. Automatic whole-workspace chains and YouTube source nodes are not covered by these tools. Check live schemas and report unsupported steps rather than claiming they ran.
 
+## Audio and voices
+
+- ElevenLabs speech (`el_tts`) selects its engine with `tts_model`: `v4` (default, most natural), `v4_turbo` and `flash` (half price), `v3`, `v2`. On v4 and v3, inline audio tags such as `[laughs]` or `[whispers]` steer the delivery; other engines have tags removed.
+- Dialogue (`el_dialogue`) takes one line per turn prefixed `A:`, `B:` or `C:`, with speakers set by `voice`, `voice2` and `voice3`. At least two speakers are required.
+- Use `list_voices` for the account's voices and default, or `list_voices` with `source="library"` to search the public ElevenLabs voice library by language, gender, age, use case or text. Library voice IDs can be used directly. When the user pastes an ElevenLabs voice link or ID, check it with `find_voice` first. Previews cost nothing; voices with a custom price multiplier are refused. These two tools need CLI 0.4.5 or newer.
+- Sound effects (`el_sfx`) last 1–30 seconds and `loop=true` makes a seamless loop. Music (`el_music`) composes per section when `lyrics` are split by lines such as `[Verse]`; `duration` must be 3–120 seconds per section. Suno offers `suno`, `suno_wild` and `suno_mini`, with `variety` for how far the two takes differ.
+
 ## ComfyUI workers
 
 - `comfy_status` reports the user's run permission, separate Comfy credits, and their own queue. `comfy_node_info` reads a node's current input schema. `comfy_upload_input` uploads local inputs and returns the name to use in the graph. ComfyUI API prompt graphs are distinct from Labs workflow graphs.
