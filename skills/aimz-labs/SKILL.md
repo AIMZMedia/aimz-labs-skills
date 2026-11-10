@@ -1,6 +1,6 @@
 ---
 name: aimz-labs
-description: Use AIMZ LABS through its connected MCP server to create and inspect media, run Labs workflows and workspace nodes, or build, edit and capture 3D blockout scenes. Use for AIMZ LABS requests, not unrelated ComfyUI administration.
+description: Use AIMZ LABS through its connected MCP server to create media, run AIMZ-hosted ComfyUI worker graphs, use Labs workflows and workspace nodes, or build and capture 3D blockout scenes. Not for unrelated ComfyUI installations.
 ---
 
 # AIMZ LABS MCP
@@ -28,9 +28,10 @@ description: Use AIMZ LABS through its connected MCP server to create and inspec
 
 ## ComfyUI workers
 
-- `comfy_status` reports the user's run permission, separate Comfy credits, and their own queue. `comfy_node_info` reads a node's current input schema. `comfy_upload_input` uploads local inputs and returns the name to use in the graph. ComfyUI API prompt graphs are distinct from Labs workflow graphs.
-- Call `comfy_estimate` with the API graph first. Charges use the recent mean successful runtime, rounded up to one credit per minute. The first execution reserves the available balance as a maximum, then settles from actual time; failures and cancellations are refunded. The reserved amount is unavailable while the run is pending.
-- Use `comfy_run` with the prompt, a new lowercase UUID `request_id`, and `max_credits` at least the quoted maximum. Follow the agent's credit approval policy. The server refuses a quote that has moved above the approved maximum. If submission is uncertain, do not resubmit: use `comfy_job` with the same ID to check the job and settlement. Use `comfy_cancel` only for the user's own job. `comfy_download_result` saves an owned output to a new local path without overwriting an existing file.
+- Follow https://aimzlabs.com/docs/mcp/comfyui. `comfy_status` reports the user's run permission, separate Comfy credits, and their own queue. `comfy_node_info` reads a node's current input schema. `comfy_upload_input` uploads local inputs and returns the name to use in the graph.
+- `comfy_run` requires a ComfyUI API prompt graph, not a Labs workflow or an editor-format graph. Use a user-provided API graph or ComfyUI's File → Export (API). MCP does not currently search Hub workflows or automatically convert Hub editor graphs; do not claim otherwise.
+- Call `comfy_estimate` with the API graph first. The response's `maximum_credits` is the approval and reservation ceiling. Recent successful runtime determines the rounded-up minute estimate; the first execution reserves the available balance as its maximum and settles from actual time. Confirmed failures and cancellations are refunded; uncertain jobs can remain pending.
+- Use `comfy_run` with the same prompt, a new lowercase UUID `request_id`, and `max_credits` at least `maximum_credits`. Follow the agent's credit approval policy. If submission is uncertain, do not resubmit: use `comfy_job` with the same ID to check the job and settlement. Use `comfy_cancel` only for the user's own job. `comfy_download_result` takes the result filename and subfolder and saves to a new local path without overwriting an existing file.
 
 ## 3D blockout and video
 
