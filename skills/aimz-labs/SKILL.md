@@ -29,6 +29,7 @@ description: Use AIMZ LABS through its connected MCP server to create media, run
 - Dialogue (`el_dialogue`) takes one line per turn prefixed `A:`, `B:` or `C:`, with speakers set by `voice`, `voice2` and `voice3`. At least two speakers are required.
 - Use `list_voices` for the account's voices and default, or `list_voices` with `source="library"` to search the public ElevenLabs voice library by language, gender, age, use case or text. Library voice IDs can be used directly. When the user pastes an ElevenLabs voice link or ID, check it with `find_voice` first. Previews cost nothing; voices with a custom price multiplier are refused. These two tools need CLI 0.4.5 or newer.
 - Sound effects (`el_sfx`) last 1–30 seconds and `loop=true` makes a seamless loop. Music (`el_music`) composes per section when `lyrics` are split by lines such as `[Verse]`; `duration` must be 3–120 seconds per section. Suno offers `suno`, `suno_wild` and `suno_mini`, with `variety` for how far the two takes differ.
+- Reference audio (`ref_audio`) for video models takes a list when `model_info` reports `max` above 1 (Seedance, MiniMax H3, Wan 3.0). Use mp3 or wav, keep each clip within `min_sec`–`max_sec` and the combined length within `max_total_sec`; trim longer audio first.
 
 ## ComfyUI workers
 
