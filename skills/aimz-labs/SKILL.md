@@ -26,6 +26,13 @@ description: Use AIMZ LABS through its connected MCP server to create media, run
 - Record client/server versions and time, redacted requests or chat, actual tool/job/request IDs, reference fingerprints, quotes/approved caps, cumulative standard costs and actual debits (ordinary and Comfy credits separately), output URLs/SHA/library records, correction/recovery evidence and observation limits. Account for both routes and retries within the existing user-approved budget; a zero debit on an unlimited account is not zero standard cost.
 - Report each route and stage as observed passed/failed, untested or blocked with its reason. Tool discovery, mocks, source inspection or an older example do not prove current parity. Unheard audio remains unobserved. If a product step is unavailable, identify the missing capability and have it implemented in that route before retesting; do not substitute a private workaround or invent a tool. A labeled review copy can be delivered with explicit gaps, but is not quality approval or completed dual-route acceptance. This requirement does not assert that existing examples or all current features have passed. See https://aimzlabs.com/docs/mcp/tools#example-acceptance.
 
+## Read only the production information needed (CLI 0.4.45+)
+
+- Start with `production_commands(section="index")`, then request the section needed. Default/`all` remains the full legacy guide; avoid repeatedly filling a bounded model context with it.
+- Read `production_inspect(section="nodes")` to find IDs and fingerprints, then use `section="node_details", node_id, fields` for the required source, connections, prompt or settings. Allowed fields are `name`, `src`, `from`, `roles`, `draft.model`, `draft.prompt`, `draft.params`, `text`, `gen.model`, `gen.prompt`, `seq`, `input`, `mask`, `element`, `scene`, `stale`. Reserved production notes, result stacks, run records and arbitrary metadata are excluded. When this schema is available, do not fall back to repeated full `workspace_get` reads that include the production journal; check actual tool schemas on older servers.
+- A node-details reply stays within 6,000 UTF-16 units of pretty JSON text. For `encoding="json-fragment"`, collect every `fragment` in order and pass the returned `next` exactly, including the same source fingerprint and selected-projection SHA. Parse the assembled JSON only after the final fragment. Changed sources, connections or selected fields refuse continuation; restart at offset zero. A journal-only revision change may still allow the same source to continue. A returned URL is stored board data, not proof of Library ownership or media quality.
+- The internal chat's **이전 대화 포함** choice defaults on and is fixed for each new request. Off sends no old conversation or summary; answering a question card includes only that clicked question. Visible history is preserved. Current board criteria, budgets and unresolved requests still apply and must be inspected; excluding history is neither new spending consent nor permission to resubmit an unknown job.
+
 ## Staged execution and bounded automation
 
 - Discover `production_control` and `production_step` in the current schemas before using them. The external MCP/CLI and internal workspace chat use the same board-scoped stage policy; this does not prove either route has passed actual acceptance. Read `production_control(board_id, action="status")` first. Configuration and resume require an actual user choice and a fresh `expected_updated_at`; use only the returned `automation_id`. Never invent confirmation tokens, change scope from model output, or treat global approval mode as per-step consent.
@@ -199,11 +206,11 @@ MCP tool index (generated from tool descriptions; check live schemas and permiss
 - `production_attach_finish` [local + hosted]: 완료한 미디어 후처리를 같은 원본의 영상 노드에 넣는다(0크레딧). 원본·이력 보존, 후속 완성본 갱신 필요, 새 결과는 다시 검수한다.
 - `production_audio_listen` [local + hosted]: 추출한 음향 구간을 실제 오디오로 반환한다. 재생/청취를 지원하지 않는 에이전트는 들었다고 표시하지 않고 uncertain으로 기록한다.
 - `production_audio_sample` [local + hosted]: 내 영상·음원의 지정 구간을 최대10초 WAV로 추출한다(0크레딧). production_media_job 완료 후 production_audio_listen으로 실제 소리를 받는다.
-- `production_commands` [local + hosted]: 영상 제작 판단·검수·수정·실행 안내와 입력 예시. 요청마다 새 설계, R2V/I2V 비교, 스타일 고정, 음향 근거, 예산·재시도·최종 검증을 다룬다.
+- `production_commands` [local + hosted]: 영상 제작 판단·검수·수정·실행 안내. section='index'로 항목과 용도를 읽고 contract_example/review_example/edit_example/workflow/honesty 등 필요한 항목만 조회한다. 기본 all은 기존 전체 안내다.
 - `production_compare` [local + hosted]: 비교용 노드 2~6개의 실제 모델·입력 방식·견적·현재 검수 근거를 대조한다. 생성하지 않으며 가격으로 품질 우승을 정하지 않는다.
 - `production_control` [local + hosted]: 단계별 제작 허용 범위와 실제 진행 기록. status는 조회, pause는 다음 실행 정지다(이미 접수한 작업 취소 아님).
 - `production_delivery` [local + hosted]: 완성 영상 URL과 검수 누락·진행 중 작업·누적 비용을 확인한다. 현재 원본과 일치하는 근거가 모두 있을 때만 ready=true. 공개 설정은 바꾸지 않는다.
-- `production_inspect` [local + hosted]: 제작 기준·결정·검수·누적 실행 기록과 현재 원본 지문을 읽는다. 검수 뒤 원본이 바뀌면 기존 승인은 유효하지 않다.
+- `production_inspect` [local + hosted]: 제작 기준·검수·원본 지문을 읽는다. nodes는 요약, node_details+node_id는 현재 src/from/roles/draft 등 허용 필드만 6000자 이내로 읽는다.
 - `production_media_finish` [local + hosted]: 내 영상을 정확한 출력 비율로 패딩하고 선택적으로 마지막 얼굴 모양 암전을 적용한다(0크레딧). 원본 보존·오디오 복사.
 - `production_media_inspect` [local + hosted]: 내 이미지·영상의 실제 프레임·해상도·길이·해시·음량을 검사한다(0크레딧). 작업 ID를 production_media_job으로 조회한다.
 - `production_media_job` [local + hosted]: 내 제작 미디어 검사·후처리 작업의 상태와 원본/결과 해시·프레임 URL·오디오 보존 근거를 조회한다.
@@ -263,3 +270,7 @@ MCP tool index (generated from tool descriptions; check live schemas and permiss
 - `workspace_run_plan` [local + hosted]: 아직 결과가 없는 노드를 만들 순서와 예상 크레딧, plan_hash. until_node_id 를 주면 그 노드에 필요한 것까지만.
 - `workspace_set_ratio` [local + hosted]: 기존 워크플로우를 새 사본으로 보존하며 미생성 컷의 비율을 바꾼다(생성·크레딧 없음).
 <!-- END GENERATED MCP TOOL INDEX -->
+
+## CLI 0.4.44 단계별 Comfy 계획 준비
+
+단계별 병행 제작은 CLI 0.4.44 이상을 사용합니다. 0.4.43은 첫 컷 진행 중 production_step(workspace_comfy_plan)으로 다음 독립 컷을 준비할 때 차단될 수 있습니다. 0.4.44는 실제 여유 슬롯과 현재 승인 참고·독립성을 검사해 준비를 허용하며 계획 상태 조회와 실제 실행 때 다시 검증합니다. 계획 준비는 슬롯·크레딧 예약이 아닙니다. 기존 작업은 원래 요청 ID로 복구하고 production_step 밖의 직접 실행으로 자동화 예산을 우회하지 않습니다.
