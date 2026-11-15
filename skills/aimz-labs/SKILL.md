@@ -14,6 +14,15 @@ description: Use AIMZ LABS through its connected MCP server to create media, run
 - Show execution completion separately from observed quality/delivery approval. ETA is null without server evidence; queued start ETA is not whole-film finish ETA. Keep the same link and IDs through recovery. Never put tokens, consent values or prompt bodies in the URL.
 - Native local jobs outside Labs owner-authenticated board/job records need their actual separate monitor integration. Do not pretend this product page discovers them. Use the AIMZ LABS neutral palette and clear tables.
 
+## Default video authoring and editing
+
+- Before writing a prompt, read the selected model/mode's current official Markdown guide and the actual installed/public input contract. Verify reference roles/order, supported duration and frame grid. Use [the authoring checklist](references/video-authoring.md); H3 and YuE2 notes link primary publisher guides. For other models, find their own official guide; do not copy H3 syntax into another family or invent a Markdown guide that does not exist.
+- Every video defaults to synchronized action Foley and quiet environment sound. Explicitly prohibit background music, score, soundtrack, instruments, song and singing, including music from visible objects. Preserve only dialogue explicitly requested by the user. Make any requested music as a separate audio file/track; prefer local YuE2 after checking actual installation and score-input support. Hosted MCP cannot access an unrelated local GPU: use a supported local execution route or report the missing bridge.
+- Generate empty space references without characters, people, animals, hands, silhouettes or reflected people. Plan useful front, oblique and task-specific high/low views while preserving the same layout. Do not make another camera angle by cropping a reference.
+- Generate required close views, coherent start/end states and the ending action inside the video. Do not hide defects using spatial crops, enlarged crops or panning crops. Time trims, aspect-preserving whole-frame resizing/padding and audio joins remain available. Preserve originals and record actual limitations.
+- Read series-specific rules from the current project's contract only when that series is actually in scope. Do not apply one project's opening/story to unrelated videos. Execution completion, observed visual quality, actual listening and final approval remain separate.
+- Read `production_commands(section="prompt_policy")` for the same packaged defaults. These are authoring instructions, not proof of model compliance or a new server restriction. A supplied direct API prompt is not silently rewritten.
+
 ## Connect and discover
 
 - Use the connected AIMZ LABS MCP server and read its initialization instructions and tool schemas. Discover the currently available tools; the server and documentation can change. Start with `whoami` when account context matters. See https://aimzlabs.com/docs/mcp and https://aimzlabs.com/docs/mcp/tools.
