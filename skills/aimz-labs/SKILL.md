@@ -5,6 +5,15 @@ description: Use AIMZ LABS through its connected MCP server to create media, run
 
 # AIMZ LABS MCP
 
+## Default production monitor for image and video requests
+
+- Always give the returned monitor_url early, across CLI, MCP and internal agents. For an existing workspace call read-only workspace_monitor(board_id) before generating. Direct generate/generate_batch should use wait=false, give the receipt URL immediately, and reuse original job IDs. Do not create a board solely to obtain a direct-job link.
+- For a native local Comfy episode outside broker records, publish its actual assets and a revision-checked snapshot on a new owned board, following `docs/ADR_PRODUCTION_MONITOR.md`. Give `https://aimzlabs.com/production/live?bd=<board_id>` with the character/space references, detail frames, exact prompts, videos, progress and ETA. Never turn a native prompt UUID into an ordinary job link. Automatic native queues yield to manual broker jobs; do not interrupt running work.
+- /production?bd=ID is the production table; /production?job=ID or a bounded jobs list follows ordinary owned jobs. /space?bd=ID remains the canvas. These routes require the corresponding server/frontend release and owner login. Do not claim an older installation or an unrelated temporary Site already has this capability.
+- Show original character, space, prop/detail and style/render references, explicit roles/order, prompts and actual outputs. Distinguish recorded submissions from unexpanded drafts. The read-only tool pages rows and 2,000-character prompt fragments with full-text SHA and continuation offsets.
+- Show execution completion separately from observed quality/delivery approval. ETA is null without server evidence; queued start ETA is not whole-film finish ETA. Keep the same link and IDs through recovery. Never put tokens, consent values or prompt bodies in the URL.
+- Native local jobs outside Labs owner-authenticated board/job records need their actual separate monitor integration. Do not pretend this product page discovers them. Use the AIMZ LABS neutral palette and clear tables.
+
 ## Connect and discover
 
 - Use the connected AIMZ LABS MCP server and read its initialization instructions and tool schemas. Discover the currently available tools; the server and documentation can change. Start with `whoami` when account context matters. See https://aimzlabs.com/docs/mcp and https://aimzlabs.com/docs/mcp/tools.
@@ -268,6 +277,7 @@ MCP tool index (generated from tool descriptions; check live schemas and permiss
 - `workspace_get` [local + hosted]: 워크스페이스 문서와 노드·연결을 조회한다.
 - `workspace_list` [local + hosted]: 내 워크스페이스(보드) 목록.
 - `workspace_mask_edit` [local + hosted]: 그림 노드에서 한 영역만 바꾸는 '영역 편집' 노드를 그 옆에 만든다(생성·크레딧 없음). 화면의 마스크 칠하기와 같은 기능이다.
+- `workspace_monitor` [local + hosted]: 소유 제작 현황 URL과 참고·프롬프트·결과 표를 읽는다. board_id, job_ids1~20개 또는 comfy_request_id와 kind 중 하나를 쓴다.
 - `workspace_plan` [local + hosted]: 연결·초안·모델을 반영한 노드 생성 요청, 예상 비용과 plan_hash 를 보여준다.
 - `workspace_reference` [local + hosted]: 레퍼런스 영상의 분석(reference_analyze 의 결과)으로 워크스페이스를 만들거나 고친다(생성·크레딧 없음).
 - `workspace_run` [local + hosted]: workspace_run_plan 의 노드들을 의존 순서대로 만들고(3개씩 같이) 결과를 **같은 워크스페이스에** 넣는다 — 기획부터 완성본까지.
@@ -280,3 +290,13 @@ MCP tool index (generated from tool descriptions; check live schemas and permiss
 단계별 병행 제작은 CLI 0.4.44 이상을 사용합니다. 0.4.43은 첫 컷 진행 중 production_step(workspace_comfy_plan)으로 다음 독립 컷을 준비할 때 차단될 수 있습니다. 0.4.44는 실제 여유 슬롯과 현재 승인 참고·독립성을 검사해 준비를 허용하며 계획 상태 조회와 실제 실행 때 다시 검증합니다. 계획 준비는 슬롯·크레딧 예약이 아닙니다. 기존 작업은 원래 요청 ID로 복구하고 production_step 밖의 직접 실행으로 자동화 예산을 우회하지 않습니다.
 
 CLI 0.4.46 also recovers a Comfy job whose submission succeeded but whose outer automation progress save failed. Reuse the original outer production_step ID or call workspace_comfy_job with the original domain ID inside production_step. A plain workspace_comfy_job poll does not reconcile the outer automation record. Exact owned queued/running evidence must match the current input fingerprint, contract, plan and cap before progress is restored. Credits, step count and pending charge remain reserved; no generation is resubmitted or acknowledged. Independent work still needs live capacity and the existing reference/dependency checks.
+
+### Standalone Labs Comfy production monitor
+
+Return `monitor_url` from `comfy_workflow_run` / `comfy_job` immediately. These are `/production?comfy=<canonical UUID>&kind=image|video|audio|auto` URLs backed by the existing owner-auth Comfy run GET, never ordinary generate job IDs. `workspace_monitor(comfy_request_id=..., kind=...)` reads the same source. Pass the actual output kind; saved output hints are limited.
+
+The broker deliberately removes executable graphs from user history. Missing exact prompts/reference URLs stay unrecorded. Verified existing server plans can expose allowlisted text inputs and owner-verified public media references; they are not reconstructed model-expanded prompts. Never expose raw graphs, private loader filenames, credential URLs or admin secrets. Direct native local `/prompt` jobs remain on a separately integrated native monitor.
+
+Batches above 20 retain every accepted receipt and return `monitor_urls` in groups of at most 20 IDs; show every group. An accepted receipt must survive monitor presentation failure. Owner 401/403/404 clears previously displayed private data immediately.
+
+Comfy job polling without kind preserves the submitted kind within the same connection. Across fresh processes it uses existing owner-scoped Library rows (maximum 50) to detect media kind; no evidence returns kind=auto and remains unknown instead of defaulting the monitor to image. No new receipt registration service is created.
