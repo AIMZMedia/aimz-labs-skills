@@ -220,7 +220,7 @@ MCP tool index (generated from tool descriptions; check live schemas and permiss
 - `library_get` [local + hosted]: 내 라이브러리 항목 번호와 출력 순번(0부터)으로 실제 원본 URL·모델·출처를 확인한다.
 - `library_registration_recover` [local + hosted]: 기존 출력의 라이브러리 등록만 복구한다. 렌더·편집·생성을 반복하지 않고 크레딧을 쓰지 않는다.
 - `library_registration_status` [local + hosted]: 파일은 만들어졌지만 라이브러리 등록이 미확정인 내 영수증을 조회한다. 재생성·재업로드하지 않는다.
-- `library_upload` [local only]: 이미 있는 로컬 작업물을 내 라이브러리에 등록한다(50MB까지). 생성·렌더를 다시 하지 않는다.
+- `library_upload` [local only]: 이미 있는 로컬 작업물을 내 라이브러리에 등록한다(1GB까지 — 50MB를 넘으면 조각으로 보낸다). 생성·렌더를 다시 하지 않는다.
 - `list_generations` [local + hosted]: 내 라이브러리. 업로드한 참고 이미지도 기본 포함한다(include_uploads=false로 제외).
 - `list_models` [local + hosted]: 생성 모델 목록. modality: image|video|audio|text|model3d(글·그림 → 3D 모델) (비우면 전체). query: 이름·id·브랜드 검색어.
 - `list_projects` [local + hosted]: 내 스튜디오 프로젝트(이름·세션 수·최근 사용) — 이미지·영상·오디오·채팅 탭 왼쪽 목록의 프로젝트다.
@@ -251,7 +251,7 @@ MCP tool index (generated from tool descriptions; check live schemas and permiss
 - `reference_analyze` [local + hosted]: 레퍼런스 영상을 분석한다(사용자 크레딧 — 영상 길이만큼, 쓴 만큼만).
 - `reference_estimate` [local + hosted]: 레퍼런스 영상 분석의 값과 그 영상이 무엇인지(제목·길이)를 본다 — 받거나 분석하지 않는다.
 - `scene_apply` [local + hosted]: 내 3D 씬(scene_id)에 작업(ops)을 적용해 저장한다 — 작업별 결과(results)·저장 여부(saved)·씬 요약·link.
-- `scene_capture` [local only]: 저장된 씬을 실제 3D 화면으로 렌더해 로컬 폴더와 내 라이브러리에 저장한다(파일당 50MB).
+- `scene_capture` [local only]: 저장된 씬을 실제 3D 화면으로 렌더해 로컬 폴더와 내 라이브러리에 저장한다(파일당 1GB).
 - `scene_catalog` [local + hosted]: 3D 씬 작업 설명서 — 좌표 약속(conventions), 작업(op) 목록과 인자(ops_doc), 고를 수 있는 값
 - `scene_create` [local + hosted]: 새 3D 씬을 만들고 작업(ops)을 적용해 저장한다 — id·브라우저로 여는 link·작업별 결과(results)·씬 요약(summary).
 - `scene_duplicate` [local + hosted]: 3D 씬을 통째로 복사해 새 씬으로 저장한다(체크포인트) — 크게 고치기 전에 지금 모습을 남겨 두고, 마음에 안 들면
@@ -261,7 +261,7 @@ MCP tool index (generated from tool descriptions; check live schemas and permiss
 - `scene_inspect` [local + hosted]: 3D 씬 카메라 점검 — 카메라마다 누가 화면 어디(x·y 0~1, 왼쪽 위가 0)에 얼마나 크게(w·h, 화면 대비) 보이는지,
 - `scene_storyboard` [local + hosted]: 3D 씬의 스토리보드 한 장(그림) — cameras: 모든 카메라를 그 순간(at_seconds)으로 한 장에 ·
 - `scene_view` [local + hosted]: 3D 씬을 실제 3D 화면으로 찍어 **그림으로 돌려준다** — 고친 뒤 눈으로 확인하고 다음 작업을 고른다(크레딧 없음, 저장 없음).
-- `upload_file` [local only]: 이 PC 파일(이미지·영상·오디오·문서, 50MB까지)을 라이브러리에 등록하고 URL·generation_id를 받는다.
+- `upload_file` [local only]: 이 PC 파일(이미지·영상·오디오·문서, 1GB까지 — 50MB를 넘으면 조각으로 보낸다)을 라이브러리에 등록하고 URL·generation_id를 받는다.
 - `video_download` [local + hosted]: 영상 한 편의 주소를 서버가 받아 내 라이브러리에 저장한다(사용자 크레딧 — 한 편에 정액, 다 받아 저장한 뒤에만 든다).
 - `video_job` [local + hosted]: 영상 받기(video_download)·레퍼런스 분석(reference_analyze) 작업의 상태 — state(queued|running|done|failed) · step · 결과.
 - `video_probe` [local + hosted]: 영상 한 편의 주소가 무엇인지(제목·올린 이·길이)와 고를 수 있는 것(choices — 화질·크기·소리만), 받는 값(credits)을 본다 — 받지 않는다.
