@@ -5,15 +5,15 @@ description: Use AIMZ LABS through its connected MCP server to create media, run
 
 # AIMZ LABS MCP
 
-## Default production monitor for image and video requests
+## Default anonymous production monitor for every user
 
-- Always give the returned monitor_url early, across CLI, MCP and internal agents. For an existing workspace call read-only workspace_monitor(board_id) before generating. Direct generate/generate_batch should use wait=false, give the receipt URL immediately, and reuse original job IDs. Do not create a board solely to obtain a direct-job link.
-- For a native local Comfy episode outside broker records, publish its actual assets and a revision-checked snapshot on a new owned board, following `docs/ADR_PRODUCTION_MONITOR.md`. Give `https://aimzlabs.com/production/live?bd=<board_id>` with the character/space references, detail frames, exact prompts, videos, progress and ETA. Never turn a native prompt UUID into an ordinary job link. Automatic native queues yield to manual broker jobs; do not interrupt running work.
-- /production?bd=ID is the production table; /production?job=ID or a bounded jobs list follows ordinary owned jobs. /space?bd=ID remains the canvas. These routes require the corresponding server/frontend release and owner login. Do not claim an older installation or an unrelated temporary Site already has this capability.
-- All returned board/job/Comfy URLs, the native `/production/live` alias and explicit read-only share links use one AIMZ LABS production viewer. Preserve the returned context URL when forwarding it; do not replace it with a project-specific page. Published final films appear above references and the process table. An ordinary generated result is not a published final or quality approval. Existing monitor links pick up website changes without reinstalling the CLI.
-- Show original character, space, prop/detail and style/render references, explicit roles/order, prompts and actual outputs. Distinguish recorded submissions from unexpanded drafts. The read-only tool pages rows and 2,000-character prompt fragments with full-text SHA and continuation offsets.
-- Show execution completion separately from observed quality/delivery approval. ETA is null without server evidence; queued start ETA is not whole-film finish ETA. Keep the same link and IDs through recovery. Never put tokens, consent values or prompt bodies in the URL.
-- Native local jobs outside Labs owner-authenticated board/job records need their actual separate monitor integration. Do not pretend this product page discovers them. Use the AIMZ LABS neutral palette and clear tables.
+- Give the returned public `monitor_url` early for every new CLI, MCP and internal-agent production. `/production-live.html?share=pm_...` opens the same viewer anonymously with editing disabled. Direct generation needs no new board. Reuse accepted job/request IDs; publication failure never repeats generation or upload.
+- New dedicated production boards explicitly publish current and future media (`monitor_future_media_public=true`). Arbitrary notes, raw graphs, loader/environment data, private accounting, owner identity and confirmation values stay private. Running a new job in an existing private board publishes only that job/request. Explicit `node_ids` scopes do not expand automatically.
+- `production_monitor_publish` selects owned job IDs (up to100), a Comfy UUID, or an owned board with explicit node IDs. `native=true` publishes only the owner-published snapshot head/chunks artifact with safe original references, actual films/posters, prompts, observations and nullable approval flags. Raw native jobs without this owned publication evidence are not automatically discovered.
+- `production_monitor_revoke` removes anonymous access only. Polling/default issuance cannot restore revoked keys; explicit owner `renew=true` alone creates a new capability. Existing owner-authenticated `/production?...` and `workspace_monitor` diagnostic routes remain available. `owner_monitor_url` is an authentication-required fallback, never the default anonymous link.
+- A batch includes every accepted ID in one public capability. On publication failure return `monitor_access=unavailable` and a generic error while preserving the original accepted/unknown receipt and credits. Recover that receipt rather than resubmitting. Check actual deployed tools/version; source tests alone do not prove installed or hosted availability.
+- Preserve original references and roles, recorded submissions versus drafts, and actual outputs. Latest films/posters appear above the process table and originals/history below. Execution completion is not quality, listening or delivery approval. ETA stays unknown without observations. Anonymous reads never submit, recover, settle, ingest, cancel or write Library media.
+- Standalone Comfy uses owned persisted run/Library evidence or the broker owner-filtered credit SELECT. Missing original prompts/references stay unknown. Credit-disabled standalone requests and raw native jobs without owned publication evidence remain unsupported.
 
 ## Default video authoring and editing
 
@@ -240,6 +240,8 @@ MCP tool index (generated from tool descriptions; check live schemas and permiss
 - `production_media_inspect` [local + hosted]: 내 이미지·영상·음원의 실제 길이·코덱·해시·음량과 해당되는 프레임·해상도를 검사한다(0크레딧). 작업 ID를 production_media_job으로 조회한다.
 - `production_media_job` [local + hosted]: 내 미디어 검사·후처리의 상태와 근거를 GET으로 조회한다. job_id 또는 request_id 중 하나를 쓴다.
 - `production_media_view` [local + hosted]: production_media_inspect가 추출한 실제 프레임을 그림으로 돌려준다. 이 그림과 고정한 캐릭터·공간 원본을 비교해 검수한다.
+- `production_monitor_publish` [local + hosted]: 소유한 제작만 익명 읽기 전용으로 게시한다(0크레딧). 생성·보드 전체공유·편집권한 변경 없음.
+- `production_monitor_revoke` [local + hosted]: 소유한 공개 제작 확인 링크 하나를 폐기한다. 원본·생성·편집·기존 보드 공유는 바꾸지 않는다.
 - `production_plan` [local + hosted]: 한 제작 단계의 실제 요청·표준 견적·누적 예약·검수 조건·plan_hash. 미검수 참고·오래된 결정·예산 초과는 can_run=false.
 - `production_preview` [local + hosted]: 완료된 컷의 시각·기술 검수는 통과했지만 음향이 미확인일 때 검토용 합본을 만든다(0크레딧).
 - `production_run` [local + hosted]: 검수 조건을 만족한 한 노드를 실행·확인·저장한다. 예약을 먼저 저장하며 무제한 계정 차감0과 표준 비용을 구분한다.
@@ -311,4 +313,4 @@ The broker deliberately removes executable graphs from user history. Missing exa
 
 Batches above 20 retain every accepted receipt and return `monitor_urls` in groups of at most 20 IDs; show every group. An accepted receipt must survive monitor presentation failure. Owner 401/403/404 clears previously displayed private data immediately.
 
-Comfy job polling without kind preserves the submitted kind within the same connection. Across fresh processes it uses existing owner-scoped Library rows (maximum 50) to detect media kind; no evidence returns kind=auto and remains unknown instead of defaulting the monitor to image. No new receipt registration service is created.
+Comfy job polling without kind preserves the submitted kind within the same connection. Across fresh processes it uses existing owner-scoped Library rows (maximum 50) to detect media kind; no evidence returns kind=auto and remains unknown instead of defaulting the monitor to image. The public monitor registry stores only owner-bound selectors; it does not submit or settle jobs.
